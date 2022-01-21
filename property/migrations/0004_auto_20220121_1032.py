@@ -3,7 +3,7 @@
 from django.db import migrations
 
 
-def set_new_building_field(apps, schema_editor):
+def fill_new_building_field(apps, schema_editor):
     Flat = apps.get_model('property', 'Flat')
     for flat in Flat.objects.all():
         if flat.construction_year >= 2015:
@@ -20,5 +20,5 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RunPython(set_new_building_field),
+        migrations.RunPython(fill_new_building_field),
     ]
