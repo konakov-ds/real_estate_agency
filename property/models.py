@@ -5,18 +5,15 @@ from phonenumber_field.modelfields import PhoneNumberField
 
 
 class Flat(models.Model):
-    owner = models.CharField('ФИО владельца', max_length=200)
-    owners_phonenumber = models.CharField('Номер владельца', max_length=20)
-    owner_pure_phone = PhoneNumberField('Нормализованный номер владельца', blank=True)
-
-    new_building = models.NullBooleanField()
     created_at = models.DateTimeField(
         'Когда создано объявление',
         default=timezone.now,
         db_index=True)
 
-    description = models.TextField('Текст объявления', blank=True)
-    price = models.IntegerField('Цена квартиры', db_index=True)
+    description = models.TextField('Текст объявления',
+                                   blank=True)
+    price = models.IntegerField('Цена квартиры',
+                                db_index=True)
 
     town = models.CharField(
         'Город, где находится квартира',
@@ -44,13 +41,16 @@ class Flat(models.Model):
         blank=True,
         db_index=True)
 
-    has_balcony = models.NullBooleanField('Наличие балкона', db_index=True)
-    active = models.BooleanField('Активно-ли объявление', db_index=True)
+    has_balcony = models.NullBooleanField('Наличие балкона',
+                                          db_index=True)
+    active = models.BooleanField('Активно-ли объявление',
+                                 db_index=True)
     construction_year = models.IntegerField(
-        'Год постройки здания',
+        verbose_name='Год постройки здания',
         null=True,
         blank=True,
         db_index=True)
+    new_building = models.NullBooleanField()
     liked_by = models.ManyToManyField(
         User,
         related_name='liked_flats',
@@ -78,14 +78,16 @@ class Complaint(models.Model):
     text = models.TextField(verbose_name='Текст жалобы')
 
     def __str__(self):
-        return f'Жалоба на квартиру {self.flat} от пользователя {self.user.last_name}'
+        return f'Жалоба на квартиру {self.flat} от {self.user.last_name}'
 
 
 class Owner(models.Model):
     name = models.CharField('ФИО владельца', max_length=200)
     phone = models.CharField('Номер владельца', max_length=20)
-    pure_phone = PhoneNumberField('Нормализованный номер владельца', blank=True)
-    flats = models.ManyToManyField(Flat, verbose_name='Квартиры в собственности',
+    pure_phone = PhoneNumberField('Нормализованный номер владельца',
+                                  blank=True)
+    flats = models.ManyToManyField(Flat,
+                                   verbose_name='Квартиры в собственности',
                                    blank=True, related_name='owners')
 
     def __str__(self):
